@@ -51,21 +51,24 @@ from gmshModel.Model import RandomInclusionRVE
 # gmshConfigChanges: dict (optional)
 #   dictionary for user updates of the default Gmsh configuration
 #
-initParameters={                                                                # save all possible parameters in one dict to facilitate the method call
-    "inclusionSets": [1, 12],                                                   # place 12 inclusions with radius 1
-    "inclusionType": "Sphere",                                                  # define inclusionType as "Sphere"
-    "size": [6, 6, 6],                                                          # set RVE size to [6,6,6]
-    "origin": [0, 0, 0],                                                        # set RVE origin to [0,0,0]
-    "periodicityFlags": [1, 1, 1],                                              # define all axis directions as periodic
-    "domainGroup": "domain",                                                    # use "domain" as name for the domainGroup
-    "inclusionGroup": "inclusions",                                             # use "inclusions" as name for the inclusionGroup
-    "gmshConfigChanges": {"General.Terminal": 0,                                # deactivate console output by default (only activated for mesh generation)
-                          "Mesh.ElementOrder":2,                                # set element order to 2
-                          "Mesh.CharacteristicLengthExtendFromBoundary": 0,     # do not calculate mesh sizes from the boundary by default (since mesh sizes are specified by fields)
-                          }
+initParameters = {  # save all possible parameters in one dict to facilitate the method call
+    "inclusionSets": [1, 12],  # place 12 inclusions with radius 1
+    "inclusionType": "Sphere",  # define inclusionType as "Sphere"
+    "size": [6, 6, 6],  # set RVE size to [6,6,6]
+    "origin": [0, 0, 0],  # set RVE origin to [0,0,0]
+    "periodicityFlags": [1, 1, 1],  # define all axis directions as periodic
+    "domainGroup": "domain",  # use "domain" as name for the domainGroup
+    "inclusionGroup":
+    "inclusions",  # use "inclusions" as name for the inclusionGroup
+    "gmshConfigChanges": {
+        "General.Terminal":
+        0,  # deactivate console output by default (only activated for mesh generation)
+        "Mesh.ElementOrder": 2,  # set element order to 2
+        "Mesh.CharacteristicLengthExtendFromBoundary":
+        0,  # do not calculate mesh sizes from the boundary by default (since mesh sizes are specified by fields)
+    }
 }
-testRVE=RandomInclusionRVE(**initParameters)
-
+testRVE = RandomInclusionRVE(**initParameters)
 
 # Gmsh model generation
 # After all parameters for the RVE are set, the Gmsh model can be generated.
@@ -77,14 +80,17 @@ testRVE=RandomInclusionRVE(**initParameters)
 #
 # placementOptions: dict (optional)
 #   user updates for the inclusion placement algorithm
-modelingParameters={                                                            # save all possible parameters in one dict to facilitate the method call
-    "placementOptions": {"maxAttempts": 10000,                                  # maximum number of attempts to place one inclusion
-                         "minRelDistBnd": 0.1,                                  # minimum relative (to inclusion radius) distance to the domain boundaries
-                         "minRelDistInc": 0.1,                                  # minimum relative (to inclusion radius) distance to other inclusions}
+modelingParameters = {  # save all possible parameters in one dict to facilitate the method call
+    "placementOptions": {
+        "maxAttempts":
+        10000,  # maximum number of attempts to place one inclusion
+        "minRelDistBnd":
+        0.1,  # minimum relative (to inclusion radius) distance to the domain boundaries
+        "minRelDistInc":
+        0.1,  # minimum relative (to inclusion radius) distance to other inclusions}
     }
 }
 testRVE.createGmshModel(**modelingParameters)
-
 
 # Gmsh mesh creation
 # After the model has been created using the Gmsh-Python-API, the meshing
@@ -97,20 +103,28 @@ testRVE.createGmshModel(**modelingParameters)
 # refinementOptions: dict (optional)
 #   dictionary containing user updates for the refinement field calculation
 #
-meshingParameters={                                                             # save all possible parameters in one dict to facilitate the method call
-    "threads": None,                                                            # do not activate parallel meshing by default
-    "refinementOptions": {"maxMeshSize": "auto",                                # automatically calculate maximum mesh size with built-in method
-                          "inclusionRefinement": True,                          # flag to indicate active refinement of inclusions
-                          "interInclusionRefinement": True,                     # flag to indicate active refinement of space between inclusions (inter-inclusion refinement)
-                          "elementsPerCircumference": 18,                       # use 18 elements per inclusion circumference for inclusion refinement
-                          "elementsBetweenInclusions": 3,                       # ensure 3 elements between close inclusions for inter-inclusion refinement
-                          "inclusionRefinementWidth": 3,                        # use a relative (to inclusion radius) refinement width of 1 for inclusion refinement
-                          "transitionElements": "auto",                         # automatically calculate number of transitioning elements (elements in which tanh function jumps from h_min to h_max) for inter-inclusion refinement
-                          "aspectRatio": 1.5                                    # aspect ratio for inter-inclusion refinement: ratio of refinement in inclusion distance and perpendicular directions
+meshingParameters = {  # save all possible parameters in one dict to facilitate the method call
+    "threads": None,  # do not activate parallel meshing by default
+    "refinementOptions": {
+        "maxMeshSize":
+        "auto",  # automatically calculate maximum mesh size with built-in method
+        "inclusionRefinement":
+        True,  # flag to indicate active refinement of inclusions
+        "interInclusionRefinement":
+        True,  # flag to indicate active refinement of space between inclusions (inter-inclusion refinement)
+        "elementsPerCircumference":
+        18,  # use 18 elements per inclusion circumference for inclusion refinement
+        "elementsBetweenInclusions":
+        3,  # ensure 3 elements between close inclusions for inter-inclusion refinement
+        "inclusionRefinementWidth":
+        3,  # use a relative (to inclusion radius) refinement width of 1 for inclusion refinement
+        "transitionElements":
+        "auto",  # automatically calculate number of transitioning elements (elements in which tanh function jumps from h_min to h_max) for inter-inclusion refinement
+        "aspectRatio":
+        1.5  # aspect ratio for inter-inclusion refinement: ratio of refinement in inclusion distance and perpendicular directions
     }
 }
 testRVE.createMesh(**meshingParameters)
-
 
 # Save resulting mesh to file
 # The mesh is generated and can be saved to a file. To this end, only the file
@@ -120,12 +134,12 @@ testRVE.createMesh(**meshingParameters)
 # directory using the unique model name and the default mesh file format (.msh)
 testRVE.saveMesh("randomInclusions3DSphere.feap")
 
+testRVE.saveMesh("listedInclusions3DSphere.xdmf")
 
 # Show resulting mesh
 # To check the generated mesh, the result can also be visualized using built-in
 # methods.
 testRVE.visualizeMesh()
-
 
 # Close Gmsh model
 # For a proper closing of the Gmsh-Python-API, the API has to be finalized. This
